@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <title>Google</title>
+    <style>
+        #container {
+            margin-top: 13%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" id="container">
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="input-group mb-3" id="searchbar">
+                    <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png"
+                        style="margin-left:230px; margin-bottom:20px" id="image" />
+
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Search something here ...." id="input"
+                            aria-label="Recipient's username" aria-describedby="button-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon2"
+                                onclick="myFun()">🔎</button>
+                        </div>
+                    </div>
+                    <p class="text-muted" id="text-muted"></p>
+                    <div id="searchresults">
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const myFun = async () => {
+            let image = document.getElementById('image')
+            image.style.display = "none"
+
+            let searchbar = document.getElementById('container');
+            searchbar.style.marginTop = '1%'
+            let input = document.getElementById('input').value
+
+            let url = await fetch(`http://api.serpstack.com/search?access_key=18a5d97fb4db0f9b0460d6d65df00cc0&query=${input}`)
+            let data = await url.json()
+            console.log(data);
+
+            let results = document.getElementById('text-muted')
+            results.innerHTML = `About ${JSON.stringify(data.search_information.total_results)} took (${JSON.stringify(data.search_information.time_taken_displayed)}) seconds)`
+            let text = document.getElementById('searchresults')
+            text.innerHTML =
+                `${JSON.stringify(data.organic_results.map((p) => {
+
+                    return (`<a href='${p.url}'>${p.title}/>
+                    <p class='text-success'>${p.url}</p>`)
+                }
+                ))}`
+        }
+
+
+
+    </script>
+    <!-- bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
